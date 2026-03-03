@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Documentation - Kirill Likhovol</title>
+    <meta name="description" content="Medical documentation for Kirill Likhovol's cancer treatment - diagnosis, treatment plans, discharge summaries.">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <style>
+        :root {
+            --bg-primary: #0d0d14;
+            --bg-secondary: #14141f;
+            --bg-card: #1a1a2e;
+            --text-primary: #e8e8ed;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --accent: #4a9eff;
+            --accent-hover: #6bb3ff;
+            --border: #2a2a3e;
+            --success: #4ade80;
+            --warning: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        /* Header */
+        .page-header {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-hover);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Document Sections */
+        .doc-section {
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .doc-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .doc-section .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* PDF Embed */
+        .pdf-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .pdf-embed {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            display: block;
+        }
+
+        .pdf-mobile-fallback {
+            display: none;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .pdf-mobile-fallback p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Image Display */
+        .doc-image-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .doc-image-link {
+            display: block;
+            cursor: zoom-in;
+        }
+
+        .doc-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-hint {
+            text-align: center;
+            padding: 0.75rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Carousel */
+        .carousel-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .carousel {
+            overflow: hidden;
+            border-radius: 8px;
+            background: var(--bg-card);
+            touch-action: pan-y pinch-zoom;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .carousel-track.dragging {
+            transition: none;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            min-width: 100%;
+        }
+
+        .carousel-slide a {
+            display: block;
+            cursor: zoom-in;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            max-height: 70vh;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel-btn.prev {
+            left: 0.75rem;
+        }
+
+        .carousel-btn.next {
+            right: 0.75rem;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .carousel-dot:hover {
+            background: var(--text-muted);
+        }
+
+        .carousel-dot.active {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .carousel-hint {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.75rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 639px) {
+            .pdf-embed {
+                display: none;
+            }
+
+            .pdf-mobile-fallback {
+                display: block;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .page-header {
+                padding: 3rem 0;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .doc-section {
+                padding: 4rem 0;
+            }
+
+            .doc-section h2 {
+                font-size: 1.75rem;
+            }
+
+            .carousel-btn {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="page-header">
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Back to main page
+            </a>
+            <h1>Medical Documentation</h1>
+        </div>
+    </header>
+
+    <!-- Section 1: Treatment Plan & Cost Estimate -->
+    <section class="doc-section">
+        <div class="container">
+            <h2>Treatment Plan & Cost Estimate</h2>
+            <p class="subtitle">Official medical consultation report from GoBroad Healthcare Group, Shanghai — diagnosis, treatment plan (ASCT + CAR-T), and detailed cost breakdown.</p>
+
+            <div class="pdf-container">
+                <embed src="docs/Medical_opinion.pdf" type="application/pdf" class="pdf-embed">
+                <div class="pdf-mobile-fallback">
+                    <p>PDF preview is not available on this device.</p>
+                    <a href="docs/Medical_opinion.pdf" class="download-btn" download>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+
+            <a href="docs/Medical_opinion.pdf" class="download-link" download>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+            </a>
+        </div>
+    </section>
+
+    <!-- Section 2: Updated Treatment Protocol -->
+    <section class="doc-section">
+        <div class="container">
+            <h2>Updated Treatment Protocol</h2>
+            <p class="subtitle">Revised treatment protocol with current cost estimate.</p>
+
+            <div class="doc-image-container">
+                <a href="docs/protocol.jpg" class="doc-image-link" target="_blank" rel="noopener">
+                    <img src="docs/protocol.jpg" alt="Updated treatment protocol" class="doc-image" loading="lazy">
+                </a>
+                <p class="image-hint">Click to open full resolution</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Discharge Summary -->
+    <section class="doc-section">
+        <div class="container">
+            <h2>Discharge Summary</h2>
+            <p class="subtitle">Official discharge summary — Shanghai Zhaxin Hospital, February 2026 (4 pages). Original document in Chinese.</p>
+
+            <div class="carousel-wrapper">
+                <div class="carousel" id="docsCarousel">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-slide">
+                            <a href="images/discharge_1.jpg" target="_blank" rel="noopener">
+                                <img src="images/discharge_1.jpg" alt="Discharge summary page 1" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="carousel-slide">
+                            <a href="images/discharge_2.jpg" target="_blank" rel="noopener">
+                                <img src="images/discharge_2.jpg" alt="Discharge summary page 2" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="carousel-slide">
+                            <a href="images/discharge_3.jpg" target="_blank" rel="noopener">
+                                <img src="images/discharge_3.jpg" alt="Discharge summary page 3" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="carousel-slide">
+                            <a href="images/discharge_4.jpg" target="_blank" rel="noopener">
+                                <img src="images/discharge_4.jpg" alt="Discharge summary page 4" loading="lazy">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-btn prev" id="prevBtn" aria-label="Previous slide">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" id="nextBtn" aria-label="Next slide">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="carousel-dots" id="carouselDots">
+                <button class="carousel-dot active" data-index="0" aria-label="Go to slide 1"></button>
+                <button class="carousel-dot" data-index="1" aria-label="Go to slide 2"></button>
+                <button class="carousel-dot" data-index="2" aria-label="Go to slide 3"></button>
+                <button class="carousel-dot" data-index="3" aria-label="Go to slide 4"></button>
+            </div>
+
+            <p class="carousel-hint">Swipe or use arrows to navigate. Click image to open full resolution.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>For questions about document authenticity, contact me directly.</p>
+            <p style="margin-top: 0.5rem;"><a href="index.html">← Back to main page</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Carousel functionality
+        (function() {
+            const track = document.getElementById('carouselTrack');
+            const dots = document.querySelectorAll('.carousel-dot');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const carousel = document.getElementById('docsCarousel');
+            const totalSlides = 4;
+            let currentIndex = 0;
+
+            // Touch/swipe variables
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            let startTranslate = 0;
+
+            function updateCarousel() {
+                track.style.transform = 'translateX(' + (-currentIndex * 100) + '%)';
+                dots.forEach(function(dot, index) {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+
+            function goToSlide(index) {
+                currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+                updateCarousel();
+            }
+
+            function nextSlide() {
+                if (currentIndex < totalSlides - 1) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            }
+
+            function prevSlide() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            }
+
+            // Button events
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            // Dot events
+            dots.forEach(function(dot) {
+                dot.addEventListener('click', function() {
+                    goToSlide(parseInt(this.dataset.index));
+                });
+            });
+
+            // Touch events for swipe
+            function getPositionX(e) {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            }
+
+            function touchStart(e) {
+                // Don't start drag if clicking on a link
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                isDragging = true;
+                startX = getPositionX(e);
+                startTranslate = -currentIndex * carousel.offsetWidth;
+                track.classList.add('dragging');
+            }
+
+            function touchMove(e) {
+                if (!isDragging) return;
+                currentX = getPositionX(e);
+                var diff = currentX - startX;
+                var translate = startTranslate + diff;
+                // Limit dragging beyond boundaries
+                var maxTranslate = 0;
+                var minTranslate = -(totalSlides - 1) * carousel.offsetWidth;
+                translate = Math.max(minTranslate - 50, Math.min(maxTranslate + 50, translate));
+                track.style.transform = 'translateX(' + translate + 'px)';
+            }
+
+            function touchEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.classList.remove('dragging');
+                var diff = currentX - startX;
+                var threshold = carousel.offsetWidth * 0.2;
+
+                if (diff > threshold && currentIndex > 0) {
+                    currentIndex--;
+                } else if (diff < -threshold && currentIndex < totalSlides - 1) {
+                    currentIndex++;
+                }
+                updateCarousel();
+            }
+
+            carousel.addEventListener('touchstart', touchStart, { passive: true });
+            carousel.addEventListener('touchmove', touchMove, { passive: true });
+            carousel.addEventListener('touchend', touchEnd);
+
+            // Mouse drag for desktop testing
+            carousel.addEventListener('mousedown', touchStart);
+            carousel.addEventListener('mousemove', touchMove);
+            carousel.addEventListener('mouseup', touchEnd);
+            carousel.addEventListener('mouseleave', function() {
+                if (isDragging) touchEnd();
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                var carouselRect = carousel.getBoundingClientRect();
+                var isVisible = carouselRect.top < window.innerHeight && carouselRect.bottom > 0;
+                if (!isVisible) return;
+
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

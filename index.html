@@ -336,22 +336,109 @@
         }
 
         /* Docs Section */
-        .docs-section .docs-grid {
-            display: grid;
-            gap: 1rem;
+        .carousel-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
         }
 
-        .doc-placeholder {
-            background: var(--bg-card);
-            border: 2px dashed var(--border);
+        .carousel {
+            overflow: hidden;
             border-radius: 8px;
-            padding: 2rem;
+            background: var(--bg-card);
+            touch-action: pan-y pinch-zoom;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .carousel-track.dragging {
+            transition: none;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            min-width: 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            max-height: 70vh;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .carousel-btn.prev {
+            left: 0.75rem;
+        }
+
+        .carousel-btn.next {
+            right: 0.75rem;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .carousel-dot:hover {
+            background: var(--text-muted);
+        }
+
+        .carousel-dot.active {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .carousel-caption {
             text-align: center;
             color: var(--text-muted);
-        }
-
-        .doc-placeholder p {
-            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            line-height: 1.5;
         }
 
         .doc-link {
@@ -366,6 +453,12 @@
 
         .doc-link:hover {
             text-decoration: underline;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-btn {
+                display: flex;
+            }
         }
 
         /* Contact Section */
@@ -522,20 +615,30 @@
         <div class="container">
             <h2>My Story</h2>
 
-            <p>My name is Kirill. I'm 27 years old, from Bishkek, Kyrgyzstan. In 2024, I was diagnosed with <strong>Primary Mediastinal B-Cell Lymphoma (PMBCL)</strong> — an aggressive blood cancer. Then came the worst news: the cancer had spread to my brain. A tumor in my left temporal lobe.</p>
+            <p>My name is Kirill. I'm 27 years old, from Bishkek, Kyrgyzstan. In summer 2025, I was diagnosed with <strong>Primary Mediastinal B-Cell Lymphoma (PMBCL)</strong> — an aggressive blood cancer. I fought through 6 cycles of DA-EPOCH-R + nivolumab chemotherapy and achieved remission, with only residual tumor burning out.</p>
+
+            <p>But the remission was short-lived. A new tumor appeared in my brain — left temporal lobe. <strong>CNS recurrence.</strong> This wasn't part of my original diagnosis. It was a new battle.</p>
 
             <div class="timeline">
                 <div class="timeline-item">
-                    <div class="timeline-date">Diagnosis</div>
-                    <div class="timeline-content"><strong>PMBCL with CNS recurrence</strong> — aggressive lymphoma with brain metastasis (left temporal lobe tumor)</div>
+                    <div class="timeline-date">Summer 2025</div>
+                    <div class="timeline-content"><strong>Diagnosed with PMBCL</strong> — Primary Mediastinal B-Cell Lymphoma. No brain involvement at this point.</div>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-date">Treatment Location</div>
-                    <div class="timeline-content">Shanghai, China — <strong>GoBroad Healthcare</strong>. Alone, no family, no insurance, in a foreign country.</div>
+                    <div class="timeline-date">First Treatment</div>
+                    <div class="timeline-content"><strong>6 cycles of DA-EPOCH-R + nivolumab</strong> chemotherapy. Achieved remission — only residual tumor burning out.</div>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-date">Phase 1 Complete</div>
-                    <div class="timeline-content"><strong>6 cycles of DA-EPOCH-R + nivolumab</strong> chemotherapy. Mediastinal mass is shrinking. Stem cells successfully collected.</div>
+                    <div class="timeline-date">Recurrence</div>
+                    <div class="timeline-content"><strong>CNS recurrence</strong> — a new tumor appeared in my brain (left temporal lobe). A separate event, not part of the original diagnosis.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Shanghai, China</div>
+                    <div class="timeline-content">Came to <strong>GoBroad Healthcare</strong> specifically to treat the CNS recurrence. Alone, no family, no insurance, in a foreign country.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Treatment in China</div>
+                    <div class="timeline-content"><strong>One round of teniposide chemotherapy at 10x the standard dose.</strong> Stem cells successfully collected.</div>
                 </div>
                 <div class="timeline-item current">
                     <div class="timeline-date">Now — Phase 2</div>
@@ -543,7 +646,9 @@
                 </div>
             </div>
 
-            <p>I've already spent approximately <strong>$300,000</strong> on treatment. I need <strong>$110,000 to $140,000</strong> more to complete the next phase. The hospital requires a minimum deposit of <strong>~$70,000</strong> before I can proceed.</p>
+            <p>I've already spent over <strong>$300,000 — all of my personal savings and assets</strong> on treatment. I need <strong>$110,000 to $140,000</strong> more to complete the next phase. The hospital requires a minimum deposit of <strong>~$70,000</strong> before I can proceed.</p>
+
+            <p>The upcoming treatment will be extremely intensive — I will be living with virtually no immune system for nearly a month. I will also need funds for post-treatment recovery, monitoring, and follow-up examinations.</p>
 
             <div class="highlight-box">
                 <p><strong>Time is critical.</strong> There's a limited window before the cancer can progress. I'm fighting this alone — no family here, no safety net. Every day matters.</p>
@@ -591,15 +696,45 @@
         <div class="container">
             <h2>Medical Documentation</h2>
 
-            <div class="docs-grid">
-                <div class="doc-placeholder">
-                    <!-- Replace with: <img src="discharge-papers.jpg" alt="Hospital discharge papers"> -->
-                    <p>Hospital discharge papers</p>
-                    <p style="font-size: 0.8rem;">(Image placeholder)</p>
+            <div class="carousel-wrapper">
+                <div class="carousel" id="docsCarousel">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-slide">
+                            <img src="images/discharge_1.jpg" alt="Discharge summary page 1" loading="lazy">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/discharge_2.jpg" alt="Discharge summary page 2" loading="lazy">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/discharge_3.jpg" alt="Discharge summary page 3" loading="lazy">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/discharge_4.jpg" alt="Discharge summary page 4" loading="lazy">
+                        </div>
+                    </div>
                 </div>
+                <button class="carousel-btn prev" id="prevBtn" aria-label="Previous slide">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" id="nextBtn" aria-label="Next slide">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
             </div>
 
-            <a href="[FULL_DOCUMENTATION_LINK]" class="doc-link" target="_blank" rel="noopener">
+            <div class="carousel-dots" id="carouselDots">
+                <button class="carousel-dot active" data-index="0" aria-label="Go to slide 1"></button>
+                <button class="carousel-dot" data-index="1" aria-label="Go to slide 2"></button>
+                <button class="carousel-dot" data-index="2" aria-label="Go to slide 3"></button>
+                <button class="carousel-dot" data-index="3" aria-label="Go to slide 4"></button>
+            </div>
+
+            <p class="carousel-caption">Official discharge summary — Shanghai Zhaxin Integrated Chinese & Western Medicine Hospital, February 2026</p>
+
+            <a href="docs.html" class="doc-link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
@@ -619,13 +754,13 @@
             <p style="color: var(--text-secondary); margin-bottom: 1rem;">Updates on my treatment and gratitude to everyone helping.</p>
 
             <div class="social-links">
-                <a href="[TWITTER_LINK]" class="social-link" target="_blank" rel="noopener">
+                <a href="https://x.com/KirillEchoes" class="social-link" target="_blank" rel="noopener">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                     Twitter
                 </a>
-                <a href="[REDDIT_POST_LINK]" class="social-link" target="_blank" rel="noopener">
+                <a href="https://www.reddit.com/r/ClaudeAI/s/iPi5S21VF0" class="social-link" target="_blank" rel="noopener">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
                     </svg>
@@ -663,6 +798,124 @@
                 console.error('Failed to copy: ', err);
             });
         }
+
+        // Carousel functionality
+        (function() {
+            const track = document.getElementById('carouselTrack');
+            const dots = document.querySelectorAll('.carousel-dot');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const carousel = document.getElementById('docsCarousel');
+            const totalSlides = 4;
+            let currentIndex = 0;
+
+            // Touch/swipe variables
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            let startTranslate = 0;
+
+            function updateCarousel() {
+                track.style.transform = 'translateX(' + (-currentIndex * 100) + '%)';
+                dots.forEach(function(dot, index) {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+
+            function goToSlide(index) {
+                currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+                updateCarousel();
+            }
+
+            function nextSlide() {
+                if (currentIndex < totalSlides - 1) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            }
+
+            function prevSlide() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            }
+
+            // Button events
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            // Dot events
+            dots.forEach(function(dot) {
+                dot.addEventListener('click', function() {
+                    goToSlide(parseInt(this.dataset.index));
+                });
+            });
+
+            // Touch events for swipe
+            function getPositionX(e) {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            }
+
+            function touchStart(e) {
+                isDragging = true;
+                startX = getPositionX(e);
+                startTranslate = -currentIndex * carousel.offsetWidth;
+                track.classList.add('dragging');
+            }
+
+            function touchMove(e) {
+                if (!isDragging) return;
+                currentX = getPositionX(e);
+                var diff = currentX - startX;
+                var translate = startTranslate + diff;
+                // Limit dragging beyond boundaries
+                var maxTranslate = 0;
+                var minTranslate = -(totalSlides - 1) * carousel.offsetWidth;
+                translate = Math.max(minTranslate - 50, Math.min(maxTranslate + 50, translate));
+                track.style.transform = 'translateX(' + translate + 'px)';
+            }
+
+            function touchEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.classList.remove('dragging');
+                var diff = currentX - startX;
+                var threshold = carousel.offsetWidth * 0.2;
+
+                if (diff > threshold && currentIndex > 0) {
+                    currentIndex--;
+                } else if (diff < -threshold && currentIndex < totalSlides - 1) {
+                    currentIndex++;
+                }
+                updateCarousel();
+            }
+
+            carousel.addEventListener('touchstart', touchStart, { passive: true });
+            carousel.addEventListener('touchmove', touchMove, { passive: true });
+            carousel.addEventListener('touchend', touchEnd);
+
+            // Mouse drag for desktop testing
+            carousel.addEventListener('mousedown', touchStart);
+            carousel.addEventListener('mousemove', touchMove);
+            carousel.addEventListener('mouseup', touchEnd);
+            carousel.addEventListener('mouseleave', function() {
+                if (isDragging) touchEnd();
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                var carouselRect = carousel.getBoundingClientRect();
+                var isVisible = carouselRect.top < window.innerHeight && carouselRect.bottom > 0;
+                if (!isVisible) return;
+
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
