@@ -6,6 +6,7 @@
     <title>Help Kirill Fight Cancer - Medical Fundraiser</title>
     <meta name="description" content="Help Kirill Likhovod, 27, fighting Primary Mediastinal B-Cell Lymphoma with brain metastasis. Fundraising for life-saving CAR-T cell therapy in Shanghai.">
     <meta name="theme-color" content="#1a1a2e">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Open Graph -->
     <meta property="og:title" content="Help Kirill Fight Cancer">
@@ -49,25 +50,6 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 0 1.25rem;
-        }
-
-        /* Video Section */
-        .video-section {
-            background: var(--bg-secondary);
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .video-placeholder {
-            background: var(--bg-card);
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
         }
 
         /* Hero Section */
@@ -207,66 +189,11 @@
             margin-bottom: 0;
         }
 
-        .timeline {
-            margin: 2rem 0;
-            padding-left: 1.5rem;
-            border-left: 2px solid var(--border);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-bottom: 1.5rem;
-            padding-left: 1.5rem;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -1.5rem;
-            top: 0.5rem;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--accent);
-            transform: translateX(-50%);
-        }
-
-        .timeline-item.current::before {
-            background: var(--warning);
-            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
-        }
-
-        .timeline-date {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-        }
-
-        .timeline-content {
-            color: var(--text-secondary);
-        }
-
-        .timeline-content strong {
+        .story-section .turning-point {
             color: var(--text-primary);
-        }
-
-        .highlight-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin-top: 1.5rem;
-        }
-
-        .highlight-box p {
-            margin-bottom: 0;
-            color: var(--text-secondary);
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin: 1.75rem 0;
         }
 
         /* Help Section */
@@ -474,6 +401,22 @@
             .donation-options {
                 grid-template-columns: repeat(2, 1fr);
             }
+        }
+
+        .swift-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .swift-note a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .swift-note a:hover {
+            text-decoration: underline;
         }
 
         /* Docs Section */
@@ -787,16 +730,6 @@
     </style>
 </head>
 <body>
-    <!-- Video Section -->
-    <section class="video-section">
-        <div class="container">
-            <div class="video-placeholder">
-                <!-- Replace with: <iframe src="YOUTUBE_EMBED_URL" frameborder="0" allowfullscreen></iframe> -->
-                <span>Video coming soon</span>
-            </div>
-        </div>
-    </section>
-
     <!-- Hero Section -->
     <header class="hero">
         <div class="container">
@@ -830,44 +763,15 @@
         <div class="container">
             <h2>My Story</h2>
 
-            <p>My name is Kirill. I'm 27 years old, from Bishkek, Kyrgyzstan. In summer 2025, I was diagnosed with <strong>Primary Mediastinal B-Cell Lymphoma (PMBCL)</strong> — an aggressive blood cancer. I fought through 6 cycles of DA-EPOCH-R + nivolumab chemotherapy and achieved remission, with only residual tumor burning out.</p>
+            <p>I'm Kirill, 27, from Kyrgyzstan. Last summer I was diagnosed with an aggressive blood cancer. I did 6 rounds of chemotherapy and went into remission.</p>
 
-            <p>But the remission was short-lived. A new tumor appeared in my brain — left temporal lobe. <strong>CNS recurrence.</strong> This wasn't part of my original diagnosis. It was a new battle.</p>
+            <p class="turning-point">Then it came back — in my brain.</p>
 
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">Summer 2025</div>
-                    <div class="timeline-content"><strong>Diagnosed with PMBCL</strong> — Primary Mediastinal B-Cell Lymphoma. No brain involvement at this point.</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">First Treatment</div>
-                    <div class="timeline-content"><strong>6 cycles of DA-EPOCH-R + nivolumab</strong> chemotherapy. Achieved remission — only residual tumor burning out.</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Recurrence</div>
-                    <div class="timeline-content"><strong>CNS recurrence</strong> — a new tumor appeared in my brain (left temporal lobe). A separate event, not part of the original diagnosis.</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Shanghai, China</div>
-                    <div class="timeline-content">Came to <strong>GoBroad Healthcare</strong> specifically to treat the CNS recurrence. Alone, no family, no insurance, in a foreign country.</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Treatment in China</div>
-                    <div class="timeline-content"><strong>One round of teniposide chemotherapy at 10x the standard dose.</strong> Stem cells successfully collected.</div>
-                </div>
-                <div class="timeline-item current">
-                    <div class="timeline-date">Now — Phase 2</div>
-                    <div class="timeline-content"><strong>Autologous stem cell transplant (ASCT) + dual CD19/CD20 CAR-T cell therapy</strong> — my best chance at survival.</div>
-                </div>
-            </div>
+            <p>I flew to Shanghai alone to get the only treatment that can save me: a stem cell transplant combined with CAR-T cell therapy — a procedure that reprograms my own immune cells to hunt cancer.</p>
 
-            <p>I've already spent over <strong>$300,000 — all of my personal savings and assets</strong> on treatment. I need <strong>$110,000 to $140,000</strong> more to complete the next phase. The hospital requires a minimum deposit of <strong>~$70,000</strong> before I can proceed.</p>
+            <p>I've already spent over $300,000 — everything I had. I need $110,000–$140,000 more to start the next phase. The hospital won't proceed without a $70,000 deposit.</p>
 
-            <p>The upcoming treatment will be extremely intensive — I will be living with virtually no immune system for nearly a month. I will also need funds for post-treatment recovery, monitoring, and follow-up examinations.</p>
-
-            <div class="highlight-box">
-                <p><strong>Time is critical.</strong> There's a limited window before the cancer can progress. I'm fighting this alone — no family here, no safety net. Every day matters.</p>
-            </div>
+            <p>I have no family here. No insurance. No safety net. And a limited window before the cancer progresses.</p>
         </div>
     </section>
 
@@ -974,6 +878,8 @@
                     </p>
                 </div>
             </div>
+
+            <p class="swift-note">For larger contributions, direct SWIFT transfers to the hospital's account through New York correspondent banks are available. Contact me at <a href="mailto:k.navigante@gmail.com">k.navigante@gmail.com</a></p>
         </div>
     </section>
 
