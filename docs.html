@@ -162,6 +162,35 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Skeleton loader animation */
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                var(--bg-card) 0%,
+                var(--bg-secondary) 50%,
+                var(--bg-card) 100%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-pulse 1.5s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .carousel-slide.loaded::before {
+            display: none;
+        }
+
+        @keyframes skeleton-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .carousel-slide img {
@@ -169,8 +198,15 @@
             height: 100%;
             display: block;
             object-fit: contain;
-            /* Ensure images are visible */
             min-height: 200px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+            position: relative;
+        }
+
+        .carousel-slide.loaded img {
+            opacity: 1;
         }
 
         /* Page counter indicator for mobile */
@@ -344,22 +380,22 @@
                 <div class="carousel" id="consultationCarousel">
                     <div class="carousel-track" id="consultationTrack">
                         <div class="carousel-slide">
-                            <img src="docs/medical_consultation_1.jpg" alt="Medical consultation report page 1" loading="lazy">
+                            <img src="docs/medical_consultation_1.jpg" alt="Medical consultation report page 1" width="929" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="docs/medical_consultation_2.jpg" alt="Medical consultation report page 2" loading="lazy">
+                            <img data-src="docs/medical_consultation_2.jpg" alt="Medical consultation report page 2" width="932" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="docs/medical_consultation_3.jpg" alt="Medical consultation report page 3" loading="lazy">
+                            <img data-src="docs/medical_consultation_3.jpg" alt="Medical consultation report page 3" width="934" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="docs/medical_consultation_4.jpg" alt="Medical consultation report page 4" loading="lazy">
+                            <img data-src="docs/medical_consultation_4.jpg" alt="Medical consultation report page 4" width="928" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="docs/medical_consultation_5.jpg" alt="Medical consultation report page 5" loading="lazy">
+                            <img data-src="docs/medical_consultation_5.jpg" alt="Medical consultation report page 5" width="925" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="docs/medical_consultation_6.jpg" alt="Medical consultation report page 6" loading="lazy">
+                            <img data-src="docs/medical_consultation_6.jpg" alt="Medical consultation report page 6" width="939" height="1280">
                         </div>
                     </div>
                 </div>
@@ -418,16 +454,16 @@
                 <div class="carousel" id="dischargeCarousel">
                     <div class="carousel-track" id="dischargeTrack">
                         <div class="carousel-slide">
-                            <img src="images/discharge_1.jpg" alt="Discharge summary page 1" loading="lazy">
+                            <img src="images/discharge_1.jpg" alt="Discharge summary page 1" width="960" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="images/discharge_2.jpg" alt="Discharge summary page 2" loading="lazy">
+                            <img data-src="images/discharge_2.jpg" alt="Discharge summary page 2" width="960" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="images/discharge_3.jpg" alt="Discharge summary page 3" loading="lazy">
+                            <img data-src="images/discharge_3.jpg" alt="Discharge summary page 3" width="960" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="images/discharge_4.jpg" alt="Discharge summary page 4" loading="lazy">
+                            <img data-src="images/discharge_4.jpg" alt="Discharge summary page 4" width="960" height="1280">
                         </div>
                     </div>
                 </div>
@@ -462,9 +498,9 @@
     </footer>
 
     <script>
-        // Multi-carousel functionality
+        // Multi-carousel functionality with lazy loading
         (function() {
-            var SWIPE_THRESHOLD = 30; // Lower threshold for more responsive swipe
+            var SWIPE_THRESHOLD = 30;
 
             // Carousel configurations
             var carousels = {
@@ -486,6 +522,49 @@
                 }
             };
 
+            // Lazy load images for current and next slides
+            function lazyLoadSlides(name) {
+                var c = carousels[name];
+                var slides = c.track.querySelectorAll('.carousel-slide');
+
+                // Load current slide and next slide
+                var indicesToLoad = [c.currentIndex];
+                if (c.currentIndex + 1 < c.totalSlides) {
+                    indicesToLoad.push(c.currentIndex + 1);
+                }
+                // Also preload previous slide for back navigation
+                if (c.currentIndex - 1 >= 0) {
+                    indicesToLoad.push(c.currentIndex - 1);
+                }
+
+                indicesToLoad.forEach(function(idx) {
+                    var slide = slides[idx];
+                    if (!slide) return;
+                    var img = slide.querySelector('img');
+                    if (!img) return;
+
+                    // If image has data-src but no src, load it
+                    if (img.getAttribute('data-src') && !img.getAttribute('src')) {
+                        img.src = img.getAttribute('data-src');
+                        img.onload = function() {
+                            slide.classList.add('loaded');
+                        };
+                        img.onerror = function() {
+                            slide.classList.add('loaded'); // Hide skeleton even on error
+                        };
+                    } else if (img.getAttribute('src')) {
+                        // Image already has src, check if loaded
+                        if (img.complete) {
+                            slide.classList.add('loaded');
+                        } else {
+                            img.onload = function() {
+                                slide.classList.add('loaded');
+                            };
+                        }
+                    }
+                });
+            }
+
             function updateCarousel(name) {
                 var c = carousels[name];
                 c.track.style.transform = 'translateX(' + (-c.currentIndex * 100) + '%)';
@@ -500,6 +579,8 @@
                 if (c.counter) {
                     c.counter.textContent = 'Page ' + (c.currentIndex + 1) + ' of ' + c.totalSlides;
                 }
+                // Lazy load images
+                lazyLoadSlides(name);
             }
 
             function goToSlide(name, index) {

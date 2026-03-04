@@ -483,6 +483,30 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Skeleton loader animation */
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, var(--bg-card) 0%, var(--bg-secondary) 50%, var(--bg-card) 100%);
+            background-size: 200% 100%;
+            animation: skeleton-pulse 1.5s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .carousel-slide.loaded::before {
+            display: none;
+        }
+
+        @keyframes skeleton-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .carousel-slide img {
@@ -492,6 +516,14 @@
             object-fit: contain;
             /* Ensure images are visible */
             min-height: 200px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .carousel-slide.loaded img {
+            opacity: 1;
         }
 
         /* On larger screens, use max-height instead of aspect-ratio */
@@ -922,16 +954,16 @@
                 <div class="carousel" id="docsCarousel">
                     <div class="carousel-track" id="carouselTrack">
                         <div class="carousel-slide">
-                            <img src="images/discharge_1.jpg" alt="Discharge summary page 1" loading="lazy">
+                            <img src="images/discharge_1.jpg" alt="Discharge summary page 1" width="960" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="images/discharge_2.jpg" alt="Discharge summary page 2" loading="lazy">
+                            <img data-src="images/discharge_2.jpg" alt="Discharge summary page 2" width="960" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="images/discharge_3.jpg" alt="Discharge summary page 3" loading="lazy">
+                            <img data-src="images/discharge_3.jpg" alt="Discharge summary page 3" width="960" height="1280">
                         </div>
                         <div class="carousel-slide">
-                            <img src="images/discharge_4.jpg" alt="Discharge summary page 4" loading="lazy">
+                            <img data-src="images/discharge_4.jpg" alt="Discharge summary page 4" width="960" height="1280">
                         </div>
                     </div>
                 </div>
@@ -1075,11 +1107,44 @@
             var prevBtn = document.getElementById('prevBtn');
             var nextBtn = document.getElementById('nextBtn');
             var carousel = document.getElementById('docsCarousel');
+            var slides = track ? track.querySelectorAll('.carousel-slide') : [];
             var totalSlides = 4;
             var currentIndex = 0;
 
             // Swipe threshold
             var SWIPE_THRESHOLD = 30;
+
+            // Lazy load slides - current, next, and previous
+            function lazyLoadSlides() {
+                var indicesToLoad = [currentIndex];
+                if (currentIndex + 1 < totalSlides) indicesToLoad.push(currentIndex + 1);
+                if (currentIndex - 1 >= 0) indicesToLoad.push(currentIndex - 1);
+
+                indicesToLoad.forEach(function(idx) {
+                    var slide = slides[idx];
+                    if (!slide) return;
+                    var img = slide.querySelector('img');
+                    if (!img) return;
+
+                    // If image has data-src and no src, load it
+                    var dataSrc = img.getAttribute('data-src');
+                    if (dataSrc && !img.getAttribute('src')) {
+                        img.src = dataSrc;
+                        img.onload = function() {
+                            slide.classList.add('loaded');
+                        };
+                    } else if (img.getAttribute('src') && !slide.classList.contains('loaded')) {
+                        // First image already has src, mark as loaded when ready
+                        if (img.complete) {
+                            slide.classList.add('loaded');
+                        } else {
+                            img.onload = function() {
+                                slide.classList.add('loaded');
+                            };
+                        }
+                    }
+                });
+            }
 
             function updateCarousel() {
                 track.style.transform = 'translateX(' + (-currentIndex * 100) + '%)';
@@ -1090,6 +1155,8 @@
                         dots[i].classList.remove('active');
                     }
                 }
+                // Lazy load current and adjacent slides
+                lazyLoadSlides();
             }
 
             function goToSlide(index) {
@@ -1196,6 +1263,9 @@
                     nextSlide();
                 }
             });
+
+            // Initial load - load first slide and preload next
+            lazyLoadSlides();
         })();
     </script>
 </body>
