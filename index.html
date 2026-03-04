@@ -150,6 +150,34 @@
             font-size: 0.9rem;
         }
 
+        .perspective-statement {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .perspective-statement .spent {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--warning);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .perspective-statement .context {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .perspective-statement .context strong {
+            font-weight: 600;
+        }
+
+        @media (min-width: 768px) {
+            .perspective-statement {
+                text-align: left;
+            }
+        }
+
         .funding-status .amount {
             font-size: 1.5rem;
             font-weight: 700;
@@ -787,6 +815,10 @@
                         <p>Still needed for treatment:</p>
                         <p class="amount">$110,000 - $140,000</p>
                         <p>Hospital deposit: ~$70,000</p>
+                    </div>
+                    <div class="perspective-statement">
+                        <span class="spent">$300,000 already spent.</span>
+                        <span class="context">That's <strong>50 years</strong> of average salary in my home country.</span>
                     </div>
                 </div>
             </div>
