@@ -154,12 +154,14 @@
         .carousel-slide {
             flex: 0 0 100%;
             min-width: 100%;
-            /* A4 aspect ratio placeholder (1:1.414) to prevent layout shift */
+            /* A4 aspect ratio with fallback for older browsers */
+            min-height: 50vh;
             aspect-ratio: 1 / 1.414;
             background: var(--bg-card);
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .carousel-slide img {
@@ -167,6 +169,8 @@
             height: 100%;
             display: block;
             object-fit: contain;
+            /* Ensure images are visible */
+            min-height: 200px;
         }
 
         /* Page counter indicator for mobile */
@@ -184,7 +188,8 @@
             }
 
             .carousel-slide {
-                /* On larger screens, limit height instead of using aspect ratio */
+                /* On larger screens, limit height instead of aspect ratio */
+                min-height: 400px;
                 aspect-ratio: auto;
                 max-height: 70vh;
             }
@@ -192,6 +197,7 @@
             .carousel-slide img {
                 max-height: 70vh;
                 height: auto;
+                min-height: auto;
             }
         }
 
