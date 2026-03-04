@@ -328,11 +328,24 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 1rem;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .donation-card:hover {
             border-color: var(--text-muted);
+            background: var(--bg-secondary);
+        }
+
+        .donation-card:active {
+            background: var(--bg-primary);
+        }
+
+        .donation-card.copied {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.05);
         }
 
         .donation-label {
@@ -368,18 +381,12 @@
             background: var(--bg-primary);
             padding: 0.65rem 0.75rem;
             border-radius: 4px;
-            cursor: pointer;
             position: relative;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, border-color 0.2s ease;
             border: 1px solid transparent;
         }
 
-        .donation-value:hover {
-            background: var(--bg-secondary);
-            border-color: var(--border);
-        }
-
-        .donation-value.copied {
+        .donation-card.copied .donation-value {
             border-color: var(--success);
             background: rgba(74, 222, 128, 0.1);
         }
@@ -388,13 +395,31 @@
             font-size: 0.7rem;
             color: var(--text-muted);
             margin-top: 0.4rem;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.35rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .donation-card:hover .copy-hint {
+            color: var(--text-secondary);
+            background: var(--bg-primary);
         }
 
         .copy-hint svg {
             opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        .copy-hint.copied {
+            color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .copy-hint.copied svg {
+            opacity: 1;
         }
 
         .copied-toast {
@@ -771,67 +796,79 @@
             <p class="crypto-section-label">Or donate with crypto</p>
 
             <div class="donation-options">
-                <div class="donation-card">
+                <div class="donation-card" data-address="18vr92ARV2sBdKjCVPZWvX2dw3vyGP4Dga" onclick="copyAddress(this)">
                     <div class="donation-label">
                         <span class="network-icon">₿</span>
                         Bitcoin
                         <span class="network-tag">BTC</span>
                     </div>
-                    <div class="donation-value" onclick="copyToClipboard(this, '18vr92ARV2sBdKjCVPZWvX2dw3vyGP4Dga')">18vr92ARV2sBdKjCVPZWvX2dw3vyGP4Dga</div>
+                    <div class="donation-value">18vr92ARV2sBdKjCVPZWvX2dw3vyGP4Dga</div>
                     <p class="copy-hint">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
-                        Click to copy
+                        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:none">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span class="copy-text">Click to copy</span>
                     </p>
                 </div>
 
-                <div class="donation-card">
+                <div class="donation-card" data-address="0x1b81037f9c4a999ba19a41b0d840d9a921b8d399" onclick="copyAddress(this)">
                     <div class="donation-label">
                         <span class="network-icon">⟠</span>
                         Ethereum
                         <span class="network-tag">ERC-20</span>
                     </div>
-                    <div class="donation-value" onclick="copyToClipboard(this, '0x1b81037f9c4a999ba19a41b0d840d9a921b8d399')">0x1b81037f9c4a999ba19a41b0d840d9a921b8d399</div>
+                    <div class="donation-value">0x1b81037f9c4a999ba19a41b0d840d9a921b8d399</div>
                     <p class="copy-hint">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
-                        Click to copy
+                        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:none">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span class="copy-text">Click to copy</span>
                     </p>
                 </div>
 
-                <div class="donation-card">
+                <div class="donation-card" data-address="TYiMXJWK4x2TujLCbVGKo7RaB45QwjXFTD" onclick="copyAddress(this)">
                     <div class="donation-label">
                         <span class="network-icon">◈</span>
                         TRON
                         <span class="network-tag">TRC-20</span>
                     </div>
-                    <div class="donation-value" onclick="copyToClipboard(this, 'TYiMXJWK4x2TujLCbVGKo7RaB45QwjXFTD')">TYiMXJWK4x2TujLCbVGKo7RaB45QwjXFTD</div>
+                    <div class="donation-value">TYiMXJWK4x2TujLCbVGKo7RaB45QwjXFTD</div>
                     <p class="copy-hint">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
-                        Click to copy
+                        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:none">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span class="copy-text">Click to copy</span>
                     </p>
                 </div>
 
-                <div class="donation-card">
+                <div class="donation-card" data-address="J4zHHGkSzM37ktt53Eodqj7fnbyExYMqva6VxfcJ8GnP" onclick="copyAddress(this)">
                     <div class="donation-label">
                         <span class="network-icon">◎</span>
                         Solana
                         <span class="network-tag">SOL</span>
                     </div>
-                    <div class="donation-value" onclick="copyToClipboard(this, 'J4zHHGkSzM37ktt53Eodqj7fnbyExYMqva6VxfcJ8GnP')">J4zHHGkSzM37ktt53Eodqj7fnbyExYMqva6VxfcJ8GnP</div>
+                    <div class="donation-value">J4zHHGkSzM37ktt53Eodqj7fnbyExYMqva6VxfcJ8GnP</div>
                     <p class="copy-hint">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
-                        Click to copy
+                        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:none">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span class="copy-text">Click to copy</span>
                     </p>
                 </div>
             </div>
@@ -929,6 +966,46 @@
     <div class="copied-toast" id="toast">Copied to clipboard</div>
 
     <script>
+        function copyAddress(card) {
+            var address = card.getAttribute('data-address');
+            if (!address) return;
+
+            navigator.clipboard.writeText(address).then(function() {
+                // Show toast
+                var toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 2000);
+
+                // Add visual feedback to the card
+                card.classList.add('copied');
+
+                // Update the hint text and icons
+                var hint = card.querySelector('.copy-hint');
+                var copyText = card.querySelector('.copy-text');
+                var copyIcon = card.querySelector('.copy-icon');
+                var checkIcon = card.querySelector('.check-icon');
+
+                if (hint) hint.classList.add('copied');
+                if (copyText) copyText.textContent = 'Copied!';
+                if (copyIcon) copyIcon.style.display = 'none';
+                if (checkIcon) checkIcon.style.display = 'inline';
+
+                // Revert after 2 seconds
+                setTimeout(function() {
+                    card.classList.remove('copied');
+                    if (hint) hint.classList.remove('copied');
+                    if (copyText) copyText.textContent = 'Click to copy';
+                    if (copyIcon) copyIcon.style.display = 'inline';
+                    if (checkIcon) checkIcon.style.display = 'none';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Legacy function for backwards compatibility
         function copyToClipboard(element, text) {
             // Don't copy placeholder text
             if (text.startsWith('[') && text.endsWith(']')) {
