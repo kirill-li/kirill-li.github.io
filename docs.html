@@ -136,7 +136,9 @@
             overflow: hidden;
             border-radius: 8px;
             background: var(--bg-card);
-            touch-action: pan-y pinch-zoom;
+            /* Allow horizontal swipe while permitting vertical scroll */
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
         }
 
         .carousel-track {
@@ -152,44 +154,94 @@
         .carousel-slide {
             flex: 0 0 100%;
             min-width: 100%;
+            /* A4 aspect ratio placeholder (1:1.414) to prevent layout shift */
+            aspect-ratio: 1 / 1.414;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .carousel-slide img {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
             object-fit: contain;
-            max-height: 70vh;
+        }
+
+        /* Page counter indicator for mobile */
+        .carousel-counter {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-counter {
+                display: none;
+            }
+
+            .carousel-slide {
+                /* On larger screens, limit height instead of using aspect ratio */
+                aspect-ratio: auto;
+                max-height: 70vh;
+            }
+
+            .carousel-slide img {
+                max-height: 70vh;
+                height: auto;
+            }
         }
 
         .carousel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--border);
             color: var(--text-primary);
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.2s ease, opacity 0.2s ease;
             z-index: 10;
+            opacity: 0.8;
         }
 
-        .carousel-btn:hover {
-            background: rgba(0, 0, 0, 0.8);
+        .carousel-btn:hover,
+        .carousel-btn:active {
+            background: rgba(0, 0, 0, 0.9);
+            opacity: 1;
         }
 
         .carousel-btn.prev {
-            left: 0.75rem;
+            left: 0.5rem;
         }
 
         .carousel-btn.next {
-            right: 0.75rem;
+            right: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-btn {
+                width: 44px;
+                height: 44px;
+                opacity: 1;
+            }
+
+            .carousel-btn.prev {
+                left: 0.75rem;
+            }
+
+            .carousel-btn.next {
+                right: 0.75rem;
+            }
         }
 
         .carousel-dots {
@@ -252,10 +304,6 @@
 
             .doc-section h2 {
                 font-size: 1.75rem;
-            }
-
-            .carousel-btn {
-                display: flex;
             }
         }
 
@@ -329,6 +377,7 @@
                 <button class="carousel-dot" data-carousel="consultation" data-index="4" aria-label="Go to slide 5"></button>
                 <button class="carousel-dot" data-carousel="consultation" data-index="5" aria-label="Go to slide 6"></button>
             </div>
+            <p class="carousel-counter" id="consultationCounter">Page 1 of 6 — Swipe to navigate</p>
 
             <a href="docs/Medical_opinion.pdf" class="download-link" download>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -394,6 +443,7 @@
                 <button class="carousel-dot" data-carousel="discharge" data-index="2" aria-label="Go to slide 3"></button>
                 <button class="carousel-dot" data-carousel="discharge" data-index="3" aria-label="Go to slide 4"></button>
             </div>
+            <p class="carousel-counter" id="dischargeCounter">Page 1 of 4 — Swipe to navigate</p>
         </div>
     </section>
 
@@ -408,7 +458,7 @@
     <script>
         // Multi-carousel functionality
         (function() {
-            var SWIPE_THRESHOLD = 50;
+            var SWIPE_THRESHOLD = 30; // Lower threshold for more responsive swipe
 
             // Carousel configurations
             var carousels = {
@@ -416,6 +466,7 @@
                     carousel: document.getElementById('consultationCarousel'),
                     track: document.getElementById('consultationTrack'),
                     dots: document.querySelectorAll('.carousel-dot[data-carousel="consultation"]'),
+                    counter: document.getElementById('consultationCounter'),
                     totalSlides: 6,
                     currentIndex: 0
                 },
@@ -423,6 +474,7 @@
                     carousel: document.getElementById('dischargeCarousel'),
                     track: document.getElementById('dischargeTrack'),
                     dots: document.querySelectorAll('.carousel-dot[data-carousel="discharge"]'),
+                    counter: document.getElementById('dischargeCounter'),
                     totalSlides: 4,
                     currentIndex: 0
                 }
@@ -437,6 +489,10 @@
                     } else {
                         c.dots[i].classList.remove('active');
                     }
+                }
+                // Update counter text
+                if (c.counter) {
+                    c.counter.textContent = 'Page ' + (c.currentIndex + 1) + ' of ' + c.totalSlides;
                 }
             }
 
@@ -492,68 +548,77 @@
                 });
             }
 
-            // Touch events for each carousel
+            // Improved touch events for each carousel
             function setupTouchEvents(name) {
                 var c = carousels[name];
-                var touchStartX = 0;
-                var touchStartY = 0;
-                var touchEndX = 0;
-                var touchEndY = 0;
-                var isSwiping = false;
-                var swipeDirection = null;
+                var startX = 0;
+                var startY = 0;
+                var distX = 0;
+                var distY = 0;
+                var startTime = 0;
+                var isTracking = false;
 
                 c.carousel.addEventListener('touchstart', function(e) {
-                    if (e.touches.length !== 1) return;
-                    touchStartX = e.touches[0].clientX;
-                    touchStartY = e.touches[0].clientY;
-                    touchEndX = touchStartX;
-                    touchEndY = touchStartY;
-                    isSwiping = true;
-                    swipeDirection = null;
+                    var touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    distX = 0;
+                    distY = 0;
+                    startTime = Date.now();
+                    isTracking = true;
                 }, { passive: true });
 
                 c.carousel.addEventListener('touchmove', function(e) {
-                    if (!isSwiping || e.touches.length !== 1) return;
+                    if (!isTracking) return;
+                    var touch = e.touches[0];
+                    distX = touch.clientX - startX;
+                    distY = touch.clientY - startY;
+                }, { passive: true });
 
-                    touchEndX = e.touches[0].clientX;
-                    touchEndY = e.touches[0].clientY;
+                c.carousel.addEventListener('touchend', function(e) {
+                    if (!isTracking) return;
+                    isTracking = false;
 
-                    var diffX = Math.abs(touchEndX - touchStartX);
-                    var diffY = Math.abs(touchEndY - touchStartY);
+                    var elapsedTime = Date.now() - startTime;
+                    var absDistX = Math.abs(distX);
+                    var absDistY = Math.abs(distY);
 
-                    if (swipeDirection === null && (diffX > 10 || diffY > 10)) {
-                        if (diffX > diffY) {
-                            swipeDirection = 'horizontal';
+                    // Only process if horizontal movement is greater than vertical
+                    // and swipe distance exceeds threshold
+                    if (absDistX > absDistY && absDistX >= SWIPE_THRESHOLD) {
+                        // Check for reasonable swipe time (not too slow)
+                        if (elapsedTime < 500) {
+                            if (distX > 0) {
+                                prevSlide(name);
+                            } else {
+                                nextSlide(name);
+                            }
                         } else {
-                            swipeDirection = 'vertical';
+                            // Slower swipe, still allow if distance is significant
+                            if (absDistX >= 50) {
+                                if (distX > 0) {
+                                    prevSlide(name);
+                                } else {
+                                    nextSlide(name);
+                                }
+                            }
                         }
                     }
                 }, { passive: true });
 
-                c.carousel.addEventListener('touchend', function(e) {
-                    if (!isSwiping) return;
-                    isSwiping = false;
-
-                    if (swipeDirection !== 'horizontal') {
-                        swipeDirection = null;
-                        return;
-                    }
-
-                    var diffX = touchEndX - touchStartX;
-
-                    if (diffX > SWIPE_THRESHOLD) {
-                        prevSlide(name);
-                    } else if (diffX < -SWIPE_THRESHOLD) {
-                        nextSlide(name);
-                    }
-
-                    swipeDirection = null;
+                // Handle touch cancel
+                c.carousel.addEventListener('touchcancel', function() {
+                    isTracking = false;
                 }, { passive: true });
             }
 
             // Setup touch events for both carousels
             setupTouchEvents('consultation');
             setupTouchEvents('discharge');
+
+            // Initialize counters
+            updateCarousel('consultation');
+            updateCarousel('discharge');
         })();
     </script>
 </body>
