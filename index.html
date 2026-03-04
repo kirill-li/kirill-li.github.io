@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Kirill Fight Cancer - Medical Fundraiser</title>
-    <meta name="description" content="Help Kirill Likhovol, 27, fighting Primary Mediastinal B-Cell Lymphoma with brain metastasis. Fundraising for life-saving CAR-T cell therapy in Shanghai.">
+    <meta name="description" content="Help Kirill Likhovod, 27, fighting Primary Mediastinal B-Cell Lymphoma with brain metastasis. Fundraising for life-saving CAR-T cell therapy in Shanghai.">
     <meta name="theme-color" content="#1a1a2e">
 
     <!-- Open Graph -->
@@ -246,27 +246,93 @@
             background: var(--bg-secondary);
         }
 
-        .donation-options {
+        .donation-primary {
+            margin-bottom: 1.5rem;
+        }
+
+        .donation-primary-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(74, 158, 255, 0.08) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .donation-primary-label {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .donation-primary-label span {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .donation-primary-label .badge {
+            font-size: 0.7rem;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .donation-primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.2s ease, transform 0.2s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .donation-primary-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .donation-primary-btn svg {
+            flex-shrink: 0;
+        }
+
+        .crypto-section-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .donation-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
         }
 
         .donation-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 1.25rem;
+            padding: 1rem;
             transition: border-color 0.2s ease;
         }
 
         .donation-card:hover {
-            border-color: var(--accent);
-        }
-
-        .donation-card.primary {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(74, 158, 255, 0.05) 100%);
+            border-color: var(--text-muted);
         }
 
         .donation-label {
@@ -275,44 +341,60 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
 
-        .donation-label .badge {
-            font-size: 0.7rem;
-            background: var(--accent);
-            color: #fff;
-            padding: 0.15rem 0.5rem;
-            border-radius: 4px;
+        .donation-label .network-icon {
+            font-size: 1rem;
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .donation-label .network-tag {
+            font-size: 0.65rem;
+            background: var(--bg-primary);
+            color: var(--text-muted);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
             font-weight: 500;
+            margin-left: auto;
         }
 
         .donation-value {
             font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+            font-size: 0.8rem;
+            color: var(--text-primary);
             word-break: break-all;
             background: var(--bg-primary);
-            padding: 0.75rem;
+            padding: 0.65rem 0.75rem;
             border-radius: 4px;
             cursor: pointer;
             position: relative;
             transition: background 0.2s ease;
+            border: 1px solid transparent;
         }
 
         .donation-value:hover {
             background: var(--bg-secondary);
+            border-color: var(--border);
         }
 
-        .donation-value.link {
-            color: var(--accent);
-            text-decoration: none;
-            display: block;
+        .donation-value.copied {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
         }
 
         .copy-hint {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .copy-hint svg {
+            opacity: 0.7;
         }
 
         .copied-toast {
@@ -333,6 +415,12 @@
         .copied-toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
+        }
+
+        @media (min-width: 480px) {
+            .donation-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         /* Docs Section */
@@ -591,11 +679,11 @@
         <div class="container">
             <div class="hero-content">
                 <div class="photo-placeholder">
-                    <!-- Replace with: <img src="photo.jpg" alt="Kirill Likhovol"> -->
-                    <span>Photo</span>
+                    <img src="images/photo1.jpg" alt="Kirill Likhovod">
+                    <!-- <span>Photo</span> -->
                 </div>
                 <div class="hero-text">
-                    <h1>Kirill Likhovol</h1>
+                    <h1>Kirill Likhovod</h1>
                     <p class="hero-tagline">27, fighting brain cancer alone in Shanghai</p>
                     <div class="hero-cta">
                         <a href="#donate" class="btn-primary">Help Save My Life</a>
@@ -661,31 +749,90 @@
         <div class="container">
             <h2>How to Help</h2>
 
-            <div class="donation-options">
-                <div class="donation-card primary">
-                    <div class="donation-label">
-                        GoFundMe
+            <!-- Primary: GoFundMe -->
+            <div class="donation-primary">
+                <div class="donation-primary-card">
+                    <div class="donation-primary-label">
+                        <span>GoFundMe</span>
                         <span class="badge">Recommended</span>
                     </div>
-                    <a href="[GOFUNDME_LINK]" class="donation-value link" target="_blank" rel="noopener">[GOFUNDME_LINK]</a>
+                    <a href="https://gofund.me/4ce495f4d" class="donation-primary-btn" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        Donate on GoFundMe
+                    </a>
+                </div>
+            </div>
+
+            <!-- Secondary: Crypto -->
+            <p class="crypto-section-label">Or donate with crypto</p>
+
+            <div class="donation-options">
+                <div class="donation-card">
+                    <div class="donation-label">
+                        <span class="network-icon">₿</span>
+                        Bitcoin
+                        <span class="network-tag">BTC</span>
+                    </div>
+                    <div class="donation-value" onclick="copyToClipboard(this, '18vr92ARV2sBdKjCVPZWvX2dw3vyGP4Dga')">18vr92ARV2sBdKjCVPZWvX2dw3vyGP4Dga</div>
+                    <p class="copy-hint">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Click to copy
+                    </p>
                 </div>
 
                 <div class="donation-card">
-                    <div class="donation-label">Bitcoin (BTC)</div>
-                    <div class="donation-value" onclick="copyToClipboard(this, '[BTC_ADDRESS]')">[BTC_ADDRESS]</div>
-                    <p class="copy-hint">Click to copy</p>
+                    <div class="donation-label">
+                        <span class="network-icon">⟠</span>
+                        Ethereum
+                        <span class="network-tag">ERC-20</span>
+                    </div>
+                    <div class="donation-value" onclick="copyToClipboard(this, '0x1b81037f9c4a999ba19a41b0d840d9a921b8d399')">0x1b81037f9c4a999ba19a41b0d840d9a921b8d399</div>
+                    <p class="copy-hint">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Click to copy
+                    </p>
                 </div>
 
                 <div class="donation-card">
-                    <div class="donation-label">Ethereum (ERC-20)</div>
-                    <div class="donation-value" onclick="copyToClipboard(this, '[ETH_ADDRESS]')">[ETH_ADDRESS]</div>
-                    <p class="copy-hint">Click to copy</p>
+                    <div class="donation-label">
+                        <span class="network-icon">◈</span>
+                        TRON
+                        <span class="network-tag">TRC-20</span>
+                    </div>
+                    <div class="donation-value" onclick="copyToClipboard(this, 'TYiMXJWK4x2TujLCbVGKo7RaB45QwjXFTD')">TYiMXJWK4x2TujLCbVGKo7RaB45QwjXFTD</div>
+                    <p class="copy-hint">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Click to copy
+                    </p>
                 </div>
 
                 <div class="donation-card">
-                    <div class="donation-label">TRON (TRC-20)</div>
-                    <div class="donation-value" onclick="copyToClipboard(this, '[TRON_ADDRESS]')">[TRON_ADDRESS]</div>
-                    <p class="copy-hint">Click to copy</p>
+                    <div class="donation-label">
+                        <span class="network-icon">◎</span>
+                        Solana
+                        <span class="network-tag">SOL</span>
+                    </div>
+                    <div class="donation-value" onclick="copyToClipboard(this, 'J4zHHGkSzM37ktt53Eodqj7fnbyExYMqva6VxfcJ8GnP')">J4zHHGkSzM37ktt53Eodqj7fnbyExYMqva6VxfcJ8GnP</div>
+                    <p class="copy-hint">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Click to copy
+                    </p>
                 </div>
             </div>
         </div>
@@ -789,11 +936,18 @@
             }
 
             navigator.clipboard.writeText(text).then(function() {
-                const toast = document.getElementById('toast');
+                // Show toast
+                var toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(function() {
                     toast.classList.remove('show');
                 }, 2000);
+
+                // Add visual feedback to the element
+                element.classList.add('copied');
+                setTimeout(function() {
+                    element.classList.remove('copied');
+                }, 1500);
             }).catch(function(err) {
                 console.error('Failed to copy: ', err);
             });
